@@ -373,7 +373,7 @@ body {
     <div class="stage-body hidden" id="stage2">
       <div class="stage-tag">&gt; ZAGADKA_02</div>
       <div class="stage-headline">RZUĆ KOŚCIĄ</div>
-      <div class="stage-sub">Rzuć kością. Ilość oczek na kości zdecyduje ile razy musisz trafić kopiąc piłką do celu. Gdy skończysz — naciśnij poniżej.</div>
+      <div class="stage-sub">Rzuć kością. Ilość oczek na kości zdecyduje ile razy musisz trafić kopiąc piłką do celu.</div>
       <div class="spacer"></div>
       <button class="btn btn-cyan" id="btnDalej3" aria-label="Przejdź dalej">ZROBIONE</button>
     </div>
@@ -382,7 +382,7 @@ body {
     <div class="stage-body hidden" id="stage3">
       <div class="stage-tag">&gt; ZAGADKA_03</div>
       <div class="stage-headline">ROZNIEĆ ISKRĘ KRZESIWEM</div>
-      <div class="stage-sub">Użyj krzesiwa które dostałeś i rozniec ogień. Gdy ci się uda — naciśnij poniżej.</div>
+      <div class="stage-sub">Użyj krzesiwa które dostałeś i rozniec ogień.</div>
       <div class="spacer"></div>
       <button class="btn btn-magenta" id="btnDalej4" aria-label="Ogień rozniécony">ZROBIONE</button>
     </div>
@@ -397,7 +397,7 @@ body {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen></iframe>
       </div>
-      <div class="stage-sub">Obejrzyj i tańcz razem z Zorbą. Gdy skończysz — naciśnij poniżej.</div>
+      <div class="stage-sub">Obejrzyj i tańcz razem z Zorbą.</div>
       <div class="spacer"></div>
       <button class="btn btn-magenta" id="btnDone2" aria-label="Ukończono taniec">ZROBIONE</button>
     </div>
@@ -432,7 +432,7 @@ body {
     <div class="stage-body hidden" id="stage6">
       <div class="stage-tag">&gt; ZAGADKA_06</div>
       <div class="stage-headline">ZAŁÓŻ ZBROJĘ</div>
-      <div class="stage-sub">Załóż zbroję i zapozuj do zdjęcia. Gdy skończysz — naciśnij poniżej.</div>
+      <div class="stage-sub">Załóż zbroję i zapozuj do zdjęcia.</div>
       <div class="spacer"></div>
       <button class="btn btn-cyan" id="btnDalej6" aria-label="Zdjęcie zrobione">ZROBIONE</button>
     </div>
@@ -441,12 +441,21 @@ body {
     <div class="stage-body hidden" id="stage7">
       <div class="stage-tag">&gt; ZAGADKA_07</div>
       <div class="stage-headline">ROZWIĄŻ REBUS</div>
-      <div class="stage-sub">Rozwiąż rebus — odpowiedź podaj po angielsku. Gdy skończysz — naciśnij poniżej.</div>
+      <div class="stage-sub">Rozwiąż rebus — odpowiedź podaj po angielsku.</div>
       <div style="width:100%;border:2px solid var(--cyan);border-radius:10px;overflow:hidden;box-shadow:0 0 18px var(--cyan),0 0 8px rgba(34,224,255,.4);margin-bottom:20px;">
         <img src="rebus.jpeg" alt="Rebus do rozwiązania" style="width:100%;display:block;" />
       </div>
       <div class="spacer"></div>
       <button class="btn btn-cyan" id="btnDalej7" aria-label="Rebus rozwiązany">ZROBIONE</button>
+    </div>
+
+    <!-- ── Stage 8: 10 reasons ── -->
+    <div class="stage-body hidden" id="stage8">
+      <div class="stage-tag">&gt; ZAGADKA_08</div>
+      <div class="stage-headline">10 POWODÓW W 2 MINUTY</div>
+      <div class="stage-sub">W 2 minuty wymień 10 powodów dla których chcesz się ożenić.</div>
+      <div class="spacer"></div>
+      <button class="btn btn-magenta" id="btnDalej8" aria-label="Zadanie wykonane">ZROBIONE</button>
     </div>
 
     <!-- ── Reward ── -->
@@ -483,6 +492,7 @@ const s4             = document.getElementById('stage4');
 const s5             = document.getElementById('stage5');
 const s6             = document.getElementById('stage6');
 const s7             = document.getElementById('stage7');
+const s8             = document.getElementById('stage8');
 const sR             = document.getElementById('stageReward');
 const digits         = [0,1,2,3].map(i => document.getElementById('d'+i));
 const errorLine      = document.getElementById('errorLine');
@@ -494,6 +504,7 @@ const btnDalej4      = document.getElementById('btnDalej4');
 const btnDalej5      = document.getElementById('btnDalej5');
 const btnDalej6      = document.getElementById('btnDalej6');
 const btnDalej7      = document.getElementById('btnDalej7');
+const btnDalej8      = document.getElementById('btnDalej8');
 const codeTiles      = document.getElementById('codeTiles');
 const btnReplay      = document.getElementById('btnReplay');
 
@@ -506,11 +517,12 @@ const TRAIL_NODES = [
   { num:'5' },
   { num:'6' },
   { num:'7' },
+  { num:'8' },
   { num:'★' },
 ];
 
 function stageIdx() {
-  if (stage === 'reward') return 7;
+  if (stage === 'reward') return 8;
   return stage - 1;
 }
 
@@ -535,7 +547,7 @@ function buildTrail() {
 }
 
 function updateCounter() {
-  counterEl.textContent = stage === 'reward' ? 'META' : stage + '/8';
+  counterEl.textContent = stage === 'reward' ? 'META' : stage + '/9';
 }
 
 // ── Show stage ────────────────────────────────────────────────────
@@ -546,7 +558,7 @@ function showStage(s) {
   buildTrail();
 
   zorbaFrame.src = '';
-  [s1,s2,s3,s4,s5,s6,s7,sR].forEach(el => el.classList.add('hidden'));
+  [s1,s2,s3,s4,s5,s6,s7,s8,sR].forEach(el => el.classList.add('hidden'));
 
   if      (s === 1)        { s1.classList.remove('hidden'); }
   else if (s === 2)        { s2.classList.remove('hidden'); }
@@ -555,6 +567,7 @@ function showStage(s) {
   else if (s === 5)        { s5.classList.remove('hidden'); }
   else if (s === 6)        { s6.classList.remove('hidden'); }
   else if (s === 7)        { s7.classList.remove('hidden'); }
+  else if (s === 8)        { s8.classList.remove('hidden'); }
   else if (s === 'reward') { buildReward(); sR.classList.remove('hidden'); }
 }
 
@@ -601,7 +614,10 @@ btnDalej5.addEventListener('click', () => showStage(6));
 btnDalej6.addEventListener('click', () => showStage(7));
 
 // ── Stage 7: Rebus (real-world task) ──────────────────────────────
-btnDalej7.addEventListener('click', () => showStage('reward'));
+btnDalej7.addEventListener('click', () => showStage(8));
+
+// ── Stage 8: 10 reasons (real-world task) ─────────────────────────
+btnDalej8.addEventListener('click', () => showStage('reward'));
 
 // ── Reward ────────────────────────────────────────────────────────
 function buildReward() {
@@ -641,7 +657,7 @@ btnReplay.addEventListener('click', () => {
 // ── Init ──────────────────────────────────────────────────────────
 (function init() {
   const saved = localStorage.getItem(STORAGE_KEY);
-  const map = { '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, 'reward':'reward' };
+  const map = { '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, 'reward':'reward' };
   showStage(map[saved] ?? 1);
 })();
 </script>
