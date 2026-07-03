@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet" />
 <style>
-/* ── Config ── */
 :root {
   --cyan:      #22E0FF;
   --magenta:   #FF3DCB;
@@ -19,15 +18,12 @@
   --locked-num:#5b4f8a;
   --locked-lbl:#6a5fa0;
   --locked-bdr:#3a2f66;
-  --locked-bdr2:#2c2450;
   --caption-c: #4f4780;
 }
 
-/* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 
-/* ── Page background ── */
 body {
   font-family: 'Space Grotesk', sans-serif;
   background:
@@ -42,7 +38,6 @@ body {
   color: var(--cyan-text);
 }
 
-/* ── Content column ── */
 .col {
   width: 100%;
   max-width: 452px;
@@ -72,9 +67,10 @@ body {
   from { transform: translateY(0) rotate(0deg);   opacity: 1; }
   to   { transform: translateY(-680px) rotate(320deg); opacity: 0; }
 }
-@keyframes cardIn {
-  from { transform: rotateY(90deg); }
-  to   { transform: rotateY(0deg); }
+@keyframes fireAppear {
+  0%   { transform: scale(0) rotate(-10deg); opacity: 0; }
+  70%  { transform: scale(1.15) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
 /* ── Header ── */
@@ -100,65 +96,21 @@ body {
 }
 
 /* ── Trail ── */
-.trail {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-.trail-node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  flex: 0 0 auto;
-}
+.trail { display: flex; align-items: center; }
+.trail-node { display: flex; flex-direction: column; align-items: center; flex: 0 0 auto; }
 .trail-dot {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Press Start 2P', monospace; font-size: 9px;
   border-radius: 4px;
   transition: all .3s;
 }
-.trail-dot.done {
-  background: var(--magenta);
-  color: #0a0420;
-  box-shadow: 0 0 14px var(--magenta), 0 0 6px var(--magenta);
-}
-.trail-dot.active {
-  background: var(--cyan);
-  color: #0a0420;
-  box-shadow: 0 0 14px var(--cyan), 0 0 6px var(--cyan);
-}
-.trail-dot.locked {
-  background: transparent;
-  border: 2px solid var(--locked-bdr);
-  color: var(--locked-num);
-}
-.trail-label {
-  font-family: 'VT323', monospace;
-  font-size: 15px;
-  transition: color .3s;
-}
-.trail-label.locked { color: var(--locked-lbl); }
-.trail-label.active,
-.trail-label.done   { color: var(--cyan-soft2); }
-
-.trail-connector {
-  flex: 1;
-  height: 3px;
-  margin-bottom: 22px;
-  transition: background .3s;
-}
-.trail-connector.lit {
-  background: repeating-linear-gradient(90deg, var(--magenta) 0 6px, transparent 6px 11px);
-}
-.trail-connector.dim {
-  background: repeating-linear-gradient(90deg, var(--locked-bdr) 0 6px, transparent 6px 11px);
-}
+.trail-dot.done   { background: var(--magenta); color: #0a0420; box-shadow: 0 0 14px var(--magenta); }
+.trail-dot.active { background: var(--cyan);    color: #0a0420; box-shadow: 0 0 14px var(--cyan); }
+.trail-dot.locked { background: transparent; border: 2px solid var(--locked-bdr); color: var(--locked-num); }
+.trail-connector { flex: 1; height: 3px; transition: background .3s; }
+.trail-connector.lit { background: repeating-linear-gradient(90deg, var(--magenta) 0 6px, transparent 6px 11px); }
+.trail-connector.dim { background: repeating-linear-gradient(90deg, var(--locked-bdr) 0 6px, transparent 6px 11px); }
 
 /* ── Screen bezel ── */
 .screen {
@@ -167,25 +119,15 @@ body {
   border: 2px solid var(--cyan);
   border-radius: 20px;
   background: linear-gradient(160deg, #170a36 0%, #0A0420 55%, #06020f 100%);
-  box-shadow:
-    0 0 20px var(--cyan),
-    0 0 40px rgba(34,224,255,.3),
-    inset 0 0 0 1px rgba(255,61,203,.3);
+  box-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(34,224,255,.3), inset 0 0 0 1px rgba(255,61,203,.3);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
-
-/* scanlines overlay */
 .screen::before {
   content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
-    rgba(0,0,0,.22) 2px, rgba(0,0,0,.22) 4px
-  );
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,.22) 2px, rgba(0,0,0,.22) 4px);
   background-size: 100% 4px;
   opacity: .45;
   pointer-events: none;
@@ -195,298 +137,223 @@ body {
 
 /* ── Stage body ── */
 .stage-body {
-  position: relative;
-  z-index: 2;
+  position: relative; z-index: 2;
   padding: 36px 26px 30px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 596px;
+  display: flex; flex-direction: column;
+  flex: 1; min-height: 596px;
 }
 .stage-tag {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
-  color: var(--magenta);
-  text-shadow: 0 0 8px var(--magenta);
+  font-family: 'Press Start 2P', monospace; font-size: 9px;
+  color: var(--magenta); text-shadow: 0 0 8px var(--magenta);
   margin-bottom: 18px;
-  letter-spacing: .5px;
 }
 .stage-headline {
-  font-family: 'VT323', monospace;
-  font-size: 38px;
-  color: var(--cyan-text);
-  text-shadow: 0 0 10px var(--cyan);
-  line-height: 1.15;
-  margin-bottom: 10px;
+  font-family: 'VT323', monospace; font-size: 38px;
+  color: var(--cyan-text); text-shadow: 0 0 10px var(--cyan);
+  line-height: 1.15; margin-bottom: 10px;
 }
 .stage-sub {
-  font-family: 'VT323', monospace;
-  font-size: 21px;
-  color: var(--cyan-soft);
-  line-height: 1.3;
-  margin-bottom: 20px;
+  font-family: 'VT323', monospace; font-size: 21px;
+  color: var(--cyan-soft); line-height: 1.3; margin-bottom: 20px;
 }
 .spacer { flex: 1; }
 
 /* ── Buttons ── */
 .btn {
-  width: 100%;
-  padding: 16px 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 13px;
+  width: 100%; padding: 16px 12px;
+  border: none; border-radius: 8px; cursor: pointer;
+  font-family: 'Press Start 2P', monospace; font-size: 13px;
   letter-spacing: .5px;
   transition: transform .15s, box-shadow .15s;
 }
 .btn:active { transform: scale(.97); }
+.btn-magenta     { background: var(--magenta); color: #0a0420; border: 2px solid #ff8ee2; box-shadow: 0 0 18px var(--magenta), 0 0 8px var(--magenta); }
+.btn-cyan        { background: var(--cyan);    color: #0a0420; border: 2px solid #a7f2ff; box-shadow: 0 0 18px var(--cyan),    0 0 8px var(--cyan); }
+.btn-outline-cyan{ background: transparent; color: var(--cyan); border: 2px solid var(--cyan); font-size: 10px; box-shadow: 0 0 14px rgba(34,224,255,.35); }
 
-.btn-magenta {
-  background: var(--magenta);
-  color: #0a0420;
-  border: 2px solid #ff8ee2;
-  box-shadow: 0 0 18px var(--magenta), 0 0 8px var(--magenta);
-}
-.btn-cyan {
-  background: var(--cyan);
-  color: #0a0420;
-  border: 2px solid #a7f2ff;
-  box-shadow: 0 0 18px var(--cyan), 0 0 8px var(--cyan);
-}
-.btn-outline-cyan {
-  background: transparent;
-  color: var(--cyan);
-  border: 2px solid var(--cyan);
-  font-size: 10px;
-  box-shadow: 0 0 14px rgba(34,224,255,.35);
-}
-
-/* ── Stage 1: digit inputs ── */
-.digit-row {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 18px;
-}
+/* ── Stage 1: digits ── */
+.digit-row { display: flex; gap: 12px; margin-bottom: 18px; }
 .digit-input {
-  flex: 1;
-  aspect-ratio: 1;
+  flex: 1; aspect-ratio: 1;
   background: rgba(34,224,255,.06);
-  border: 2px solid var(--cyan);
-  border-radius: 8px;
+  border: 2px solid var(--cyan); border-radius: 8px;
   text-align: center;
-  font-family: 'VT323', monospace;
-  font-size: 42px;
-  color: var(--cyan);
-  caret-color: var(--magenta);
+  font-family: 'VT323', monospace; font-size: 42px;
+  color: var(--cyan); caret-color: var(--magenta);
   box-shadow: inset 0 0 12px rgba(34,224,255,.18), 0 0 8px rgba(34,224,255,.2);
-  outline: none;
-  -webkit-appearance: none;
-  min-width: 0;
-  padding: 0;
+  outline: none; -webkit-appearance: none; min-width: 0; padding: 0;
 }
-.digit-input:focus {
-  border-color: var(--cyan);
-  box-shadow: inset 0 0 18px rgba(34,224,255,.28), 0 0 16px var(--cyan);
-}
-
+.digit-input:focus { box-shadow: inset 0 0 18px rgba(34,224,255,.28), 0 0 16px var(--cyan); }
 .error-line {
-  font-family: 'VT323', monospace;
-  font-size: 20px;
-  color: var(--magenta);
-  text-shadow: 0 0 8px var(--magenta);
-  margin-bottom: 14px;
-  animation: shake .4s;
-}
-
-/* ── Stage 2: cards ── */
-.cards-row {
-  display: flex;
-  justify-content: center;
-  gap: 11px;
-  margin-bottom: 22px;
-  flex-wrap: wrap;
-}
-.card {
-  width: 56px;
-  height: 80px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'VT323', monospace;
-  font-size: 32px;
-  cursor: pointer;
-  transition: all .25s;
-  user-select: none;
-  background: linear-gradient(160deg, #2a1656, #1a0b3d);
-  border: 2px solid var(--magenta);
-  color: var(--magenta);
-  box-shadow: 0 0 12px rgba(255,61,203,.45);
-}
-.card:hover {
-  transform: translateY(-4px) scale(1.04);
-  box-shadow: 0 0 20px var(--magenta);
-}
-.card.chosen {
-  background: linear-gradient(160deg, #0d3a40, #061a20);
-  border-color: var(--cyan);
-  color: #0a0420;
-  background-color: var(--cyan);
-  background: var(--cyan);
-  box-shadow: 0 0 18px var(--cyan), 0 0 8px var(--cyan);
-  transform: translateY(-8px) scale(1.06);
-  color: #0a0420;
-}
-.card.dimmed {
-  opacity: .5;
-  filter: saturate(.4);
-  box-shadow: none;
-  transform: none;
-}
-
-.reveal-panel {
-  border: 2px solid var(--cyan);
-  border-radius: 10px;
-  background: rgba(34,224,255,.07);
-  padding: 18px 22px;
-  text-align: center;
-  margin-bottom: 20px;
-  animation: pop .45s cubic-bezier(.36,.07,.19,.97) both;
-}
-.reveal-label {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  color: var(--cyan-soft);
-  margin-bottom: 10px;
-  letter-spacing: .5px;
-}
-.reveal-task {
-  font-family: 'VT323', monospace;
-  font-size: 36px;
-  color: var(--cyan-text);
-  text-shadow: 0 0 10px var(--cyan);
+  font-family: 'VT323', monospace; font-size: 20px;
+  color: var(--magenta); text-shadow: 0 0 8px var(--magenta);
+  margin-bottom: 14px; animation: shake .4s;
 }
 
 /* ── Stage 3: video ── */
 .video-wrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16/9;
-  margin-bottom: 16px;
-  border-radius: 8px;
-  overflow: hidden;
+  position: relative; width: 100%; aspect-ratio: 16/9;
+  margin-bottom: 16px; border-radius: 8px; overflow: hidden;
   border: 2px solid var(--cyan);
   box-shadow: 0 0 18px var(--cyan), 0 0 8px rgba(34,224,255,.4);
   background: #000;
 }
-.video-wrapper iframe {
+.video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+/* ── Stage 3: dice picker ── */
+.dice-instruction {
+  font-family: 'VT323', monospace; font-size: 23px;
+  color: var(--cyan-soft); line-height: 1.35;
+  margin-bottom: 22px;
+  border: 2px solid rgba(34,224,255,.25);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: rgba(34,224,255,.04);
+}
+.dice-picker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.dice-btn {
+  aspect-ratio: 1;
+  background: rgba(255,61,203,.08);
+  border: 2px solid var(--magenta);
+  border-radius: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 20px;
+  color: var(--magenta);
+  text-shadow: 0 0 8px var(--magenta);
+  box-shadow: 0 0 12px rgba(255,61,203,.3);
+  cursor: pointer;
+  transition: all .18s;
+  display: flex; align-items: center; justify-content: center;
+}
+.dice-btn:hover  { background: rgba(255,61,203,.18); box-shadow: 0 0 20px var(--magenta); transform: scale(1.06); }
+.dice-btn:active { transform: scale(.94); }
+.dice-btn.selected {
+  background: var(--magenta); color: #0a0420;
+  text-shadow: none; box-shadow: 0 0 22px var(--magenta);
+  transform: scale(1.1);
+}
+
+/* ── Stage 3: Ball field ── */
+.hit-info {
+  font-family: 'VT323', monospace; font-size: 30px;
+  color: var(--cyan-text); text-shadow: 0 0 8px var(--cyan);
+  text-align: center; margin-bottom: 10px; letter-spacing: 2px;
+}
+.field {
+  position: relative; width: 100%; height: 190px;
+  border: 2px solid rgba(34,224,255,.35); border-radius: 10px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0,60,20,.6) 0%, rgba(0,20,8,.8) 100%);
+  box-shadow: inset 0 0 20px rgba(0,0,0,.5), 0 0 10px rgba(34,224,255,.2);
+  overflow: hidden; margin-bottom: 18px;
+}
+.field::before {
+  content: '';
+  position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 60%; height: 22px;
+  border: 2px solid rgba(34,224,255,.5);
+  border-bottom: none;
+  border-top-left-radius: 4px; border-top-right-radius: 4px;
+}
+.ball-target {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  width: 52px; height: 52px;
+  font-size: 38px; line-height: 52px; text-align: center;
+  cursor: pointer; user-select: none;
+  transition: left .32s cubic-bezier(.34,1.56,.64,1), top .32s cubic-bezier(.34,1.56,.64,1);
+  filter: drop-shadow(0 0 6px rgba(255,255,255,.4));
+  left: 50%; top: 50%; transform: translate(-50%,-50%);
+}
+
+/* ── Stage 4: Flint/spark ── */
+.spark-area { display: flex; flex-direction: column; align-items: center; gap: 18px; margin-bottom: 20px; }
+.flint-btn {
+  font-size: 72px; cursor: pointer; user-select: none;
+  transition: transform .1s;
+  filter: drop-shadow(0 4px 12px rgba(255,160,0,.4));
+  -webkit-tap-highlight-color: transparent;
+  display: block; line-height: 1; padding: 10px;
+}
+.flint-btn:active { transform: scale(.88) rotate(-8deg); }
+.spark-bar-wrap {
+  width: 100%; height: 14px;
+  border: 2px solid var(--magenta); border-radius: 7px;
+  overflow: hidden; background: rgba(255,61,203,.08); margin-bottom: 8px;
+}
+.spark-bar {
   height: 100%;
-  border: none;
+  background: linear-gradient(90deg, var(--magenta), #ff8ee2);
+  width: 0%; transition: width .18s ease;
+  box-shadow: 0 0 10px var(--magenta); border-radius: 5px;
+}
+.spark-counter {
+  font-family: 'VT323', monospace; font-size: 24px;
+  color: var(--magenta); text-shadow: 0 0 8px var(--magenta); text-align: center;
+}
+.fire-reveal {
+  font-family: 'VT323', monospace; font-size: 36px;
+  color: #FFB800; text-shadow: 0 0 14px #FF6B00, 0 0 28px #FF3D00;
+  text-align: center;
+  animation: fireAppear .5s cubic-bezier(.36,.07,.19,.97) both;
+  margin-bottom: 12px;
 }
 
 /* ── Reward ── */
 .reward-body {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  flex: 1;
-  overflow: hidden;
-  gap: 18px;
-  padding: 36px 26px 30px;
-  z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; flex: 1; overflow: hidden;
+  gap: 18px; padding: 36px 26px 30px; z-index: 2;
 }
-
-.confetti-piece {
-  position: absolute;
-  border-radius: 2px;
-  z-index: 1;
-  pointer-events: none;
-  animation: floatUp linear both;
-  bottom: 0;
-}
-
-.quest-complete {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
-  color: var(--cyan);
-  text-shadow: 0 0 12px var(--cyan), 0 0 24px var(--cyan);
-  line-height: 2.2;
-  z-index: 2;
-}
-.reward-sub {
-  font-family: 'VT323', monospace;
-  font-size: 24px;
-  color: var(--cyan-soft2);
-  z-index: 2;
-}
-.code-tiles {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  z-index: 2;
-}
+.confetti-piece { position: absolute; border-radius: 2px; z-index: 1; pointer-events: none; animation: floatUp linear both; bottom: 0; }
+.quest-complete { font-family: 'Press Start 2P', monospace; font-size: 11px; color: var(--cyan); text-shadow: 0 0 12px var(--cyan), 0 0 24px var(--cyan); line-height: 2.2; z-index: 2; }
+.reward-sub { font-family: 'VT323', monospace; font-size: 24px; color: var(--cyan-soft2); z-index: 2; }
+.code-tiles { display: flex; gap: 10px; justify-content: center; z-index: 2; }
 .code-tile {
-  width: 60px;
-  height: 78px;
-  border: 2px solid var(--magenta);
-  border-radius: 8px;
+  width: 60px; height: 78px;
+  border: 2px solid var(--magenta); border-radius: 8px;
   background: rgba(255,61,203,.12);
   box-shadow: 0 0 18px var(--magenta), inset 0 0 12px rgba(255,61,203,.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 24px;
-  color: var(--magenta);
-  text-shadow: 0 0 10px var(--magenta);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Press Start 2P', monospace; font-size: 24px;
+  color: var(--magenta); text-shadow: 0 0 10px var(--magenta);
   animation: pop .5s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-/* ── Bottom caption ── */
-.bottom-caption {
-  font-family: 'VT323', monospace;
-  font-size: 16px;
-  color: var(--caption-c);
-  text-align: center;
-  letter-spacing: 1px;
-}
-
-/* ── Hidden util ── */
+.bottom-caption { font-family: 'VT323', monospace; font-size: 16px; color: var(--caption-c); text-align: center; letter-spacing: 1px; }
 .hidden { display: none !important; }
 
-/* ── Responsive tweaks ── */
 @media (max-width: 400px) {
   .stage-headline { font-size: 30px; }
   .digit-input    { font-size: 32px; }
-  .card           { width: 46px; height: 66px; font-size: 26px; }
   .code-tile      { width: 50px; height: 66px; font-size: 18px; }
-  .reveal-task    { font-size: 28px; }
+  .dice-btn       { font-size: 16px; }
+  .flint-btn      { font-size: 58px; }
 }
 </style>
 </head>
 <body>
 <div class="col">
+
   <!-- HEADER + TRAIL -->
   <div>
     <div class="header">
       <span class="logo">QUEST</span>
-      <span class="counter" id="counter">1/4</span>
+      <span class="counter" id="counter">1/5</span>
     </div>
-    <div class="trail" id="trail">
-      <!-- generated by JS -->
-    </div>
+    <div class="trail" id="trail"></div>
   </div>
 
-  <!-- SCREEN BEZEL -->
-  <div class="screen" id="screen">
-    <!-- Stage 1 -->
+  <!-- SCREEN -->
+  <div class="screen">
+
+    <!-- ── Stage 1: Number riddle ── -->
     <div class="stage-body" id="stage1">
       <div class="stage-tag">&gt; ZAGADKA_01</div>
       <div class="stage-headline">OD NAJMNIEJSZEGO DO NAJWIĘKSZEGO PRZYJACIELA</div>
@@ -502,122 +369,107 @@ body {
       <button class="btn btn-magenta" id="btnCheck" aria-label="Sprawdź odpowiedź">SPRAWDŹ</button>
     </div>
 
-    <!-- Stage 2 -->
+    <!-- ── Stage 2: Zorba dance ── -->
     <div class="stage-body hidden" id="stage2">
       <div class="stage-tag">&gt; ZAGADKA_02</div>
-      <div class="stage-headline">WYBIERZ SWOJĄ KARTĘ</div>
-      <div class="stage-sub">Pick your fate — los jest już przesądzony.</div>
-      <div class="cards-row" id="cardsRow">
-        <div class="card" data-idx="0" role="button" tabindex="0" aria-label="Karta 1">?</div>
-        <div class="card" data-idx="1" role="button" tabindex="0" aria-label="Karta 2">?</div>
-        <div class="card" data-idx="2" role="button" tabindex="0" aria-label="Karta 3">?</div>
-        <div class="card" data-idx="3" role="button" tabindex="0" aria-label="Karta 4">?</div>
-        <div class="card" data-idx="4" role="button" tabindex="0" aria-label="Karta 5">?</div>
-      </div>
-      <div class="reveal-panel hidden" id="revealPanel">
-        <div class="reveal-label">TWOJE ZADANIE</div>
-        <div class="reveal-task" id="revealTask"></div>
-      </div>
-      <div class="spacer"></div>
-      <button class="btn btn-cyan hidden" id="btnDalej" aria-label="Przejdź dalej">DALEJ</button>
-    </div>
-
-    <!-- Stage 3 -->
-    <div class="stage-body hidden" id="stage3">
-      <div class="stage-tag">&gt; ZAGADKA_03</div>
       <div class="stage-headline">ZATAŃCZ DO PIOSENKI Z FILMU GREK ZORBA</div>
       <div class="video-wrapper">
-        <iframe
-          id="zorbaFrame"
-          src=""
+        <iframe id="zorbaFrame" src=""
           title="Zorba the Greek – Sirtaki dance video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+          allowfullscreen></iframe>
       </div>
       <div class="stage-sub">Obejrzyj i tańcz razem z Zorbą. Gdy skończysz — naciśnij poniżej.</div>
       <div class="spacer"></div>
-      <button class="btn btn-magenta" id="btnDone" aria-label="Ukończono taniec">ZROBIONE</button>
+      <button class="btn btn-magenta" id="btnDone2" aria-label="Ukończono taniec">ZROBIONE</button>
     </div>
 
-    <!-- Reward -->
+    <!-- ── Stage 3: Dice + ball (real-world) ── -->
+    <div class="stage-body hidden" id="stage3">
+      <div class="stage-tag">&gt; ZAGADKA_03</div>
+      <div class="stage-headline">RZUĆ KOŚCIĄ</div>
+      <div class="stage-sub">Rzuć kością. Ilość oczek na kości zdecyduje ile razy musisz trafić kopiąc piłką do celu. Gdy skończysz — naciśnij poniżej.</div>
+      <div class="spacer"></div>
+      <button class="btn btn-cyan" id="btnDalej3" aria-label="Przejdź dalej">ZROBIONE</button>
+    </div>
+
+    <!-- ── Stage 4: Flint spark ── -->
+    <div class="stage-body hidden" id="stage4">
+      <div class="stage-tag">&gt; ZAGADKA_04</div>
+      <div class="stage-headline">ROZNIEĆ ISKRĘ KRZESIWEM</div>
+      <div class="stage-sub">Użyj krzesiwa które dostałeś i rozniec ogień. Gdy ci się uda — naciśnij poniżej.</div>
+      <div class="spacer"></div>
+      <button class="btn btn-magenta" id="btnDalej4" aria-label="Ogień rozniécony">ZROBIONE</button>
+    </div>
+
+    <!-- ── Reward ── -->
     <div class="reward-body hidden" id="stageReward">
-      <!-- confetti injected by JS -->
       <div class="quest-complete">QUEST<br>COMPLETE</div>
       <div class="reward-sub">Twój kod nagrody:</div>
-      <div class="code-tiles" id="codeTiles">
-        <!-- tiles injected by JS -->
-      </div>
+      <div class="code-tiles" id="codeTiles"></div>
       <button class="btn btn-outline-cyan" id="btnReplay" aria-label="Zagraj ponownie">ZAGRAJ PONOWNIE</button>
     </div>
-  </div>
+
+  </div><!-- /screen -->
 
   <div class="bottom-caption">INSERT COIN · 10-STAGE QUEST</div>
 </div>
 
 <script>
-// ── Config constants ──────────────────────────────────────────────
-const PASS_CODE_STAGE1 = '6969';
-const REWARD_CODE      = '1234';
+// ── Config ────────────────────────────────────────────────────────
+const PASS_CODE_STAGE1 = '5748';
+const REWARD_CODE      = '8592';
 const ZORBA_VIDEO_ID   = 'GIoHp6mr9Vg';
 const STORAGE_KEY      = 'quest-arcade-stage';
-const CARD_TASK        = 'ODEGRAJ SCENĘ CYPR';
 
 // ── State ─────────────────────────────────────────────────────────
-let stage      = 1;           // 1 | 2 | 3 | 'reward'
-let cardPicked = null;        // number | null
-let hasError   = false;       // boolean
+let stage       = 1;
+let hasError    = false;
 
 // ── DOM refs ──────────────────────────────────────────────────────
-const counterEl   = document.getElementById('counter');
-const trailEl     = document.getElementById('trail');
-const s1          = document.getElementById('stage1');
-const s2          = document.getElementById('stage2');
-const s3          = document.getElementById('stage3');
-const sR          = document.getElementById('stageReward');
-const digits      = [0,1,2,3].map(i => document.getElementById('d'+i));
-const errorLine   = document.getElementById('errorLine');
-const btnCheck    = document.getElementById('btnCheck');
-const cardsRow    = document.getElementById('cardsRow');
-const revealPanel = document.getElementById('revealPanel');
-const revealTask  = document.getElementById('revealTask');
-const btnDalej    = document.getElementById('btnDalej');
-const zorbaFrame  = document.getElementById('zorbaFrame');
-const btnDone     = document.getElementById('btnDone');
-const codeTiles   = document.getElementById('codeTiles');
-const btnReplay   = document.getElementById('btnReplay');
+const counterEl      = document.getElementById('counter');
+const trailEl        = document.getElementById('trail');
+const s1             = document.getElementById('stage1');
+const s2             = document.getElementById('stage2');
+const s3             = document.getElementById('stage3');
+const s4             = document.getElementById('stage4');
+const sR             = document.getElementById('stageReward');
+const digits         = [0,1,2,3].map(i => document.getElementById('d'+i));
+const errorLine      = document.getElementById('errorLine');
+const btnCheck       = document.getElementById('btnCheck');
+const zorbaFrame     = document.getElementById('zorbaFrame');
+const btnDone2       = document.getElementById('btnDone2');
+const btnDalej3      = document.getElementById('btnDalej3');
+const btnDalej4      = document.getElementById('btnDalej4');
+const codeTiles      = document.getElementById('codeTiles');
+const btnReplay      = document.getElementById('btnReplay');
 
-// ── Trail data ─────────────────────────────────────────────────────
+// ── Trail ─────────────────────────────────────────────────────────
 const TRAIL_NODES = [
-  { num: '1', label: 'LICZBY' },
-  { num: '2', label: 'KARTA'  },
-  { num: '3', label: 'TANIEC' },
-  { num: '★', label: 'META'   },
+  { num:'1' },
+  { num:'2' },
+  { num:'3' },
+  { num:'4' },
+  { num:'★' },
 ];
 
 function stageIdx() {
-  if (stage === 'reward') return 3;
-  return stage - 1; // 0,1,2
+  if (stage === 'reward') return 4;
+  return stage - 1;
 }
 
 function buildTrail() {
   trailEl.innerHTML = '';
   const idx = stageIdx();
   TRAIL_NODES.forEach((node, i) => {
-    // node
     const status = i < idx ? 'done' : i === idx ? 'active' : 'locked';
     const wrap = document.createElement('div');
     wrap.className = 'trail-node';
     const dot = document.createElement('div');
     dot.className = `trail-dot ${status}`;
     dot.textContent = node.num;
-    const lbl = document.createElement('div');
-    lbl.className = `trail-label ${status === 'locked' ? 'locked' : (status === 'done' ? 'done' : 'active')}`;
-    lbl.textContent = node.label;
     wrap.appendChild(dot);
-    wrap.appendChild(lbl);
     trailEl.appendChild(wrap);
-    // connector (after every node except last)
     if (i < TRAIL_NODES.length - 1) {
       const conn = document.createElement('div');
       conn.className = `trail-connector ${i < idx ? 'lit' : 'dim'}`;
@@ -627,58 +479,36 @@ function buildTrail() {
 }
 
 function updateCounter() {
-  if (stage === 'reward') {
-    counterEl.textContent = 'META';
-  } else {
-    counterEl.textContent = stage + '/4';
-  }
+  counterEl.textContent = stage === 'reward' ? 'META' : stage + '/5';
 }
 
-// ── Show stage ─────────────────────────────────────────────────────
+// ── Show stage ────────────────────────────────────────────────────
 function showStage(s) {
   stage = s;
   localStorage.setItem(STORAGE_KEY, String(s));
   updateCounter();
   buildTrail();
 
-  s1.classList.add('hidden');
-  s2.classList.add('hidden');
-  s3.classList.add('hidden');
-  sR.classList.add('hidden');
+  zorbaFrame.src = '';
+  [s1,s2,s3,s4,sR].forEach(el => el.classList.add('hidden'));
 
-  if (s === 1) {
-    s1.classList.remove('hidden');
-  } else if (s === 2) {
-    cardPicked = null;
-    revealPanel.classList.add('hidden');
-    btnDalej.classList.add('hidden');
-    resetCards();
-    s2.classList.remove('hidden');
-  } else if (s === 3) {
-    zorbaFrame.src = `https://www.youtube-nocookie.com/embed/${ZORBA_VIDEO_ID}?rel=0&start=25`;
-    s3.classList.remove('hidden');
-  } else if (s === 'reward') {
-    buildReward();
-    sR.classList.remove('hidden');
-  }
+  if      (s === 1)        { s1.classList.remove('hidden'); }
+  else if (s === 2)        { zorbaFrame.src = `https://www.youtube-nocookie.com/embed/${ZORBA_VIDEO_ID}?rel=0&start=25`; s2.classList.remove('hidden'); }
+  else if (s === 3)        { s3.classList.remove('hidden'); }
+  else if (s === 4)        { s4.classList.remove('hidden'); }
+  else if (s === 'reward') { buildReward(); sR.classList.remove('hidden'); }
 }
 
-// ── Stage 1 logic ──────────────────────────────────────────────────
+// ── Stage 1 ───────────────────────────────────────────────────────
 digits.forEach((inp, i) => {
-  inp.addEventListener('input', e => {
-    // clear error on any input
-    if (hasError) {
-      hasError = false;
-      errorLine.classList.add('hidden');
-    }
+  inp.addEventListener('input', () => {
+    if (hasError) { hasError = false; errorLine.classList.add('hidden'); }
     const raw = inp.value.replace(/\D/g, '');
     inp.value = raw ? raw[raw.length - 1] : '';
     if (raw && i < 3) digits[i + 1].focus();
   });
   inp.addEventListener('keydown', e => {
-    if (e.key === 'Backspace' && inp.value === '' && i > 0) {
-      digits[i - 1].focus();
-    }
+    if (e.key === 'Backspace' && inp.value === '' && i > 0) digits[i - 1].focus();
   });
 });
 
@@ -686,118 +516,65 @@ btnCheck.addEventListener('click', () => {
   const code = digits.map(d => d.value).join('');
   if (code === PASS_CODE_STAGE1) {
     digits.forEach(d => d.value = '');
-    hasError = false;
-    errorLine.classList.add('hidden');
+    hasError = false; errorLine.classList.add('hidden');
     showStage(2);
   } else {
     hasError = true;
-    // re-trigger animation by cloning
-    errorLine.classList.remove('hidden');
     errorLine.classList.add('hidden');
-    void errorLine.offsetWidth; // reflow
+    void errorLine.offsetWidth;
     errorLine.classList.remove('hidden');
   }
 });
 
-// ── Stage 2 logic ──────────────────────────────────────────────────
-function resetCards() {
-  Array.from(cardsRow.children).forEach(card => {
-    card.classList.remove('chosen', 'dimmed');
-    card.textContent = '?';
-  });
-}
+// ── Stage 2 ───────────────────────────────────────────────────────
+btnDone2.addEventListener('click', () => showStage(3));
 
-cardsRow.addEventListener('click', e => {
-  const card = e.target.closest('.card');
-  if (!card) return;
-  pickCard(Number(card.dataset.idx));
-});
-cardsRow.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ' ') {
-    const card = e.target.closest('.card');
-    if (card) pickCard(Number(card.dataset.idx));
-  }
-});
+// ── Stage 3: dice + ball (real-world) ────────────────────────────
+btnDalej3.addEventListener('click', () => showStage(4));
 
-function pickCard(idx) {
-  cardPicked = idx;
-  Array.from(cardsRow.children).forEach((card, i) => {
-    card.classList.remove('chosen', 'dimmed');
-    if (i === idx) {
-      card.classList.add('chosen');
-      card.textContent = '★';
-    } else {
-      card.classList.add('dimmed');
-    }
-  });
-  revealTask.textContent = CARD_TASK;
-  revealPanel.classList.remove('hidden');
-  btnDalej.classList.remove('hidden');
-}
+// ── Stage 4: flint (real-world task) ─────────────────────────────
+btnDalej4.addEventListener('click', () => showStage('reward'));
 
-btnDalej.addEventListener('click', () => {
-  if (cardPicked !== null) showStage(3);
-});
-
-// ── Stage 3 logic ──────────────────────────────────────────────────
-btnDone.addEventListener('click', () => showStage('reward'));
-
-// ── Reward ─────────────────────────────────────────────────────────
-const CONFETTI_COLORS = ['#22E0FF', '#FF3DCB'];
-const CONFETTI_COUNT  = 22;
-
+// ── Reward ────────────────────────────────────────────────────────
 function buildReward() {
-  // clear old confetti
-  Array.from(sR.querySelectorAll('.confetti-piece')).forEach(el => el.remove());
-
-  // confetti
-  for (let i = 0; i < CONFETTI_COUNT; i++) {
+  sR.querySelectorAll('.confetti-piece').forEach(el => el.remove());
+  for (let i = 0; i < 22; i++) {
     const el = document.createElement('div');
     el.className = 'confetti-piece';
-    const color = CONFETTI_COLORS[i % 2];
+    const color = i%2 ? '#22E0FF' : '#FF3DCB';
     const size  = 6 + Math.random() * 6;
-    const left  = 2 + Math.random() * 96;
-    const dur   = 2.6 + Math.random();
-    const delay = Math.random() * 1.6;
     el.style.cssText = `
       width:${size}px; height:${size}px;
-      left:${left}%;
-      background:${color};
-      box-shadow:0 0 6px ${color};
-      animation-duration:${dur}s;
-      animation-delay:${delay}s;
+      left:${2 + Math.random()*96}%;
+      background:${color}; box-shadow:0 0 6px ${color};
+      animation-duration:${2.6 + Math.random()}s;
+      animation-delay:${Math.random()*1.6}s;
     `;
     sR.insertBefore(el, sR.firstChild);
   }
-
-  // code tiles
   codeTiles.innerHTML = '';
-  REWARD_CODE.split('').forEach((digit, i) => {
+  REWARD_CODE.split('').forEach((d, i) => {
     const tile = document.createElement('div');
     tile.className = 'code-tile';
-    tile.textContent = digit;
+    tile.textContent = d;
     tile.style.animationDelay = `${i * 0.12}s`;
     codeTiles.appendChild(tile);
   });
 }
 
 btnReplay.addEventListener('click', () => {
-  cardPicked = null;
-  hasError   = false;
+  hasError = false;
   digits.forEach(d => d.value = '');
   errorLine.classList.add('hidden');
   localStorage.removeItem(STORAGE_KEY);
   showStage(1);
 });
 
-// ── Init: restore from localStorage ────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────────
 (function init() {
   const saved = localStorage.getItem(STORAGE_KEY);
-  let startStage = 1;
-  if (saved === '2') startStage = 2;
-  else if (saved === '3') startStage = 3;
-  else if (saved === 'reward') startStage = 'reward';
-  showStage(startStage);
+  const map = { '2':2, '3':3, '4':4, 'reward':'reward' };
+  showStage(map[saved] ?? 1);
 })();
 </script>
 </body>
