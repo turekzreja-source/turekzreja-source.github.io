@@ -369,9 +369,27 @@ body {
       <button class="btn btn-magenta" id="btnCheck" aria-label="Sprawdź odpowiedź">SPRAWDŹ</button>
     </div>
 
-    <!-- ── Stage 2: Zorba dance ── -->
+    <!-- ── Stage 2: Dice + ball (real-world) ── -->
     <div class="stage-body hidden" id="stage2">
       <div class="stage-tag">&gt; ZAGADKA_02</div>
+      <div class="stage-headline">RZUĆ KOŚCIĄ</div>
+      <div class="stage-sub">Rzuć kością. Ilość oczek na kości zdecyduje ile razy musisz trafić kopiąc piłką do celu. Gdy skończysz — naciśnij poniżej.</div>
+      <div class="spacer"></div>
+      <button class="btn btn-cyan" id="btnDalej3" aria-label="Przejdź dalej">ZROBIONE</button>
+    </div>
+
+    <!-- ── Stage 3: Flint spark ── -->
+    <div class="stage-body hidden" id="stage3">
+      <div class="stage-tag">&gt; ZAGADKA_03</div>
+      <div class="stage-headline">ROZNIEĆ ISKRĘ KRZESIWEM</div>
+      <div class="stage-sub">Użyj krzesiwa które dostałeś i rozniec ogień. Gdy ci się uda — naciśnij poniżej.</div>
+      <div class="spacer"></div>
+      <button class="btn btn-magenta" id="btnDalej4" aria-label="Ogień rozniécony">ZROBIONE</button>
+    </div>
+
+    <!-- ── Stage 4: Zorba dance ── -->
+    <div class="stage-body hidden" id="stage4">
+      <div class="stage-tag">&gt; ZAGADKA_04</div>
       <div class="stage-headline">ZATAŃCZ DO PIOSENKI Z FILMU GREK ZORBA</div>
       <div class="video-wrapper">
         <iframe id="zorbaFrame" src=""
@@ -382,24 +400,6 @@ body {
       <div class="stage-sub">Obejrzyj i tańcz razem z Zorbą. Gdy skończysz — naciśnij poniżej.</div>
       <div class="spacer"></div>
       <button class="btn btn-magenta" id="btnDone2" aria-label="Ukończono taniec">ZROBIONE</button>
-    </div>
-
-    <!-- ── Stage 3: Dice + ball (real-world) ── -->
-    <div class="stage-body hidden" id="stage3">
-      <div class="stage-tag">&gt; ZAGADKA_03</div>
-      <div class="stage-headline">RZUĆ KOŚCIĄ</div>
-      <div class="stage-sub">Rzuć kością. Ilość oczek na kości zdecyduje ile razy musisz trafić kopiąc piłką do celu. Gdy skończysz — naciśnij poniżej.</div>
-      <div class="spacer"></div>
-      <button class="btn btn-cyan" id="btnDalej3" aria-label="Przejdź dalej">ZROBIONE</button>
-    </div>
-
-    <!-- ── Stage 4: Flint spark ── -->
-    <div class="stage-body hidden" id="stage4">
-      <div class="stage-tag">&gt; ZAGADKA_04</div>
-      <div class="stage-headline">ROZNIEĆ ISKRĘ KRZESIWEM</div>
-      <div class="stage-sub">Użyj krzesiwa które dostałeś i rozniec ogień. Gdy ci się uda — naciśnij poniżej.</div>
-      <div class="spacer"></div>
-      <button class="btn btn-magenta" id="btnDalej4" aria-label="Ogień rozniécony">ZROBIONE</button>
     </div>
 
     <!-- ── Stage 5: Patryk Cypr scene ── -->
@@ -549,9 +549,9 @@ function showStage(s) {
   [s1,s2,s3,s4,s5,s6,s7,sR].forEach(el => el.classList.add('hidden'));
 
   if      (s === 1)        { s1.classList.remove('hidden'); }
-  else if (s === 2)        { zorbaFrame.src = `https://www.youtube-nocookie.com/embed/${ZORBA_VIDEO_ID}?rel=0&start=25`; s2.classList.remove('hidden'); }
+  else if (s === 2)        { s2.classList.remove('hidden'); }
   else if (s === 3)        { s3.classList.remove('hidden'); }
-  else if (s === 4)        { s4.classList.remove('hidden'); }
+  else if (s === 4)        { zorbaFrame.src = `https://www.youtube-nocookie.com/embed/${ZORBA_VIDEO_ID}?rel=0&start=25`; s4.classList.remove('hidden'); }
   else if (s === 5)        { s5.classList.remove('hidden'); }
   else if (s === 6)        { s6.classList.remove('hidden'); }
   else if (s === 7)        { s7.classList.remove('hidden'); }
@@ -585,14 +585,14 @@ btnCheck.addEventListener('click', () => {
   }
 });
 
-// ── Stage 2 ───────────────────────────────────────────────────────
-btnDone2.addEventListener('click', () => showStage(3));
+// ── Stage 2: dice + ball (real-world) ────────────────────────────
+btnDalej3.addEventListener('click', () => showStage(3));
 
-// ── Stage 3: dice + ball (real-world) ────────────────────────────
-btnDalej3.addEventListener('click', () => showStage(4));
+// ── Stage 3: flint (real-world task) ─────────────────────────────
+btnDalej4.addEventListener('click', () => showStage(4));
 
-// ── Stage 4: flint (real-world task) ─────────────────────────────
-btnDalej4.addEventListener('click', () => showStage(5));
+// ── Stage 4: Zorba dance ──────────────────────────────────────────
+btnDone2.addEventListener('click', () => showStage(5));
 
 // ── Stage 5: Patryk Cypr scene (real-world task) ──────────────────
 btnDalej5.addEventListener('click', () => showStage(6));
